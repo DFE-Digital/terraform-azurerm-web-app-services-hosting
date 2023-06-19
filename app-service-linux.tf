@@ -8,7 +8,7 @@ resource "azurerm_linux_web_app" "default" {
 
   virtual_network_subnet_id = azurerm_subnet.web_app_service_infra_subnet[0].id
   https_only                = true
-  app_settings              = merge(
+  app_settings = merge(
     local.service_app_settings,
     local.service_app_insights_settings,
   )

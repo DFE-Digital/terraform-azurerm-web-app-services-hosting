@@ -21,3 +21,8 @@ output "azurerm_linux_web_app_default" {
   value       = azurerm_linux_web_app.default
   description = "Default Azure Linux Web App"
 }
+
+output "azurerm_cdn_frontdoor_endpoint_endpoint" {
+  value       = azurerm_cdn_frontdoor_endpoint.endpoint
+  description = "Front Door (standard/premium) Endpoint"
+}
