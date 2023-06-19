@@ -64,17 +64,25 @@ locals {
     "AppServicePlatformLogs"
   ])
 
-  enable_monitoring              = var.enable_monitoring
-  monitor_email_receivers        = var.monitor_email_receivers
-  monitor_enable_slack_webhook   = var.monitor_enable_slack_webhook
-  monitor_slack_webhook_receiver = var.monitor_slack_webhook_receiver
-  monitor_slack_channel          = var.monitor_slack_channel
-  monitor_endpoint_healthcheck   = var.monitor_endpoint_healthcheck
+  enable_monitoring               = var.enable_monitoring
+  existing_logic_app_workflow     = var.existing_logic_app_workflow
+  logic_app_workflow_name         = local.existing_logic_app_workflow.name == "" ? (local.enable_monitoring ? azurerm_logic_app_workflow.webhook[0].name : "") : data.azurerm_logic_app_workflow.existing_logic_app_workflow[0].name
+  logic_app_workflow_id           = local.existing_logic_app_workflow.name == "" ? (local.enable_monitoring ? azurerm_logic_app_workflow.webhook[0].id : "") : data.azurerm_logic_app_workflow.existing_logic_app_workflow[0].id
+  logic_app_workflow_callback_url = local.existing_logic_app_workflow.name == "" ? (local.enable_monitoring ? azurerm_logic_app_trigger_http_request.webhook[0].callback_url : "") : jsondecode(data.azapi_resource_action.existing_logic_app_workflow_callback_url[0].output).value
+  monitor_email_receivers         = var.monitor_email_receivers
+  monitor_enable_slack_webhook    = var.monitor_enable_slack_webhook
+  monitor_slack_webhook_receiver  = var.monitor_slack_webhook_receiver
+  monitor_slack_channel           = var.monitor_slack_channel
+  monitor_logic_app_receiver = {
+    name         = local.logic_app_workflow_name
+    resource_id  = local.logic_app_workflow_id
+    callback_url = local.logic_app_workflow_callback_url
+  }
+  monitor_endpoint_healthcheck = var.monitor_endpoint_healthcheck
   monitor_http_availability_fqdn = local.enable_cdn_frontdoor ? (
     length(local.cdn_frontdoor_custom_domains) >= 1 ? local.cdn_frontdoor_custom_domains[0] : azurerm_cdn_frontdoor_endpoint.endpoint[0].host_name
   ) : local.service_app.default_hostname
-  monitor_http_availability_url = "https://${local.monitor_http_availability_fqdn}${local.monitor_endpoint_healthcheck}"
-
+  monitor_http_availability_url           = "https://${local.monitor_http_availability_fqdn}${local.monitor_endpoint_healthcheck}"
   enable_cdn_frontdoor                    = var.enable_cdn_frontdoor
   enable_cdn_frontdoor_health_probe       = var.enable_cdn_frontdoor_health_probe
   cdn_frontdoor_sku                       = var.cdn_frontdoor_sku

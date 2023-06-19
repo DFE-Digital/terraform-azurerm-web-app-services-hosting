@@ -431,3 +431,17 @@ variable "dns_txt_records" {
   )
   default = {}
 }
+
+variable "existing_logic_app_workflow" {
+  description = "Name, Resource Group and HTTP Trigger URL of an existing Logic App Workflow. Leave empty to create a new Resource"
+  type = object({
+    name : string
+    resource_group_name : string
+    trigger_url : string
+  })
+  default = {
+    name                = ""
+    resource_group_name = ""
+    trigger_url         = ""
+  }
+}

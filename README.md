@@ -51,6 +51,14 @@ module "azure_web_app_services_hosting" {
   monitor_slack_webhook_receiver = "https://hooks.slack.com/services/xxx/xxx/xxx"
   monitor_slack_channel          = "channel-name-or-id"
 
+  ## If you have an existing Logic App Workflow for routing Alerts then you can specify it here instead of creating
+  ## a new one
+  # existing_logic_app_workflow = {
+  #   name                = "my-logic-app"
+  #   resource_group_name = "my-other-rg"
+  #   trigger_url         = "https://my-callback-url.tld"
+  # }
+
   enable_dns_zone      = true
   dns_zone_domain_name = "example.com"
   dns_zone_soa_record  = {
@@ -217,6 +225,7 @@ module "azure_web_app_services_hosting" {
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azapi"></a> [azapi](#provider\_azapi) | 1.4.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.57.0 |
 | <a name="provider_dns"></a> [dns](#provider\_dns) | 3.3.2 |
 
@@ -256,6 +265,8 @@ module "azure_web_app_services_hosting" {
 | [azurerm_dns_zone.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_zone) | resource |
 | [azurerm_linux_web_app.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app) | resource |
 | [azurerm_log_analytics_workspace.web_app_service](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) | resource |
+| [azurerm_logic_app_action_custom.var_affected_resource](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_action_custom) | resource |
+| [azurerm_logic_app_action_custom.var_alarm_context](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_action_custom) | resource |
 | [azurerm_logic_app_action_http.slack](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_action_http) | resource |
 | [azurerm_logic_app_trigger_http_request.webhook](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_trigger_http_request) | resource |
 | [azurerm_logic_app_workflow.webhook](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/logic_app_workflow) | resource |
@@ -281,6 +292,8 @@ module "azure_web_app_services_hosting" {
 | [azurerm_subnet_route_table_association.web_app_service_infra_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_route_table_association) | resource |
 | [azurerm_virtual_network.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
 | [azurerm_windows_web_app.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_web_app) | resource |
+| [azapi_resource_action.existing_logic_app_workflow_callback_url](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/resource_action) | data source |
+| [azurerm_logic_app_workflow.existing_logic_app_workflow](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/logic_app_workflow) | data source |
 | [azurerm_resource_group.existing_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 | [azurerm_storage_account_blob_container_sas.logs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas) | data source |
 | [azurerm_virtual_network.existing_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network) | data source |
@@ -325,6 +338,7 @@ module "azure_web_app_services_hosting" {
 | <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Conditionally enable NAT Gateway. This is used to configure a static outbound IP. This is only avaiable when launching within a VNet. | `bool` | `true` | no |
 | <a name="input_enable_service_logs"></a> [enable\_service\_logs](#input\_enable\_service\_logs) | Enable service logs, stored in blob storage | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. Will be used along with `project_name` as a prefix for all resources. | `string` | n/a | yes |
+| <a name="input_existing_logic_app_workflow"></a> [existing\_logic\_app\_workflow](#input\_existing\_logic\_app\_workflow) | Name, Resource Group and HTTP Trigger URL of an existing Logic App Workflow. Leave empty to create a new Resource | <pre>object({<br>    name : string<br>    resource_group_name : string<br>    trigger_url : string<br>  })</pre> | <pre>{<br>  "name": "",<br>  "resource_group_name": "",<br>  "trigger_url": ""<br>}</pre> | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | Conditionally launch resources into an existing resource group. Specifying this will NOT create a resource group. | `string` | `""` | no |
 | <a name="input_existing_virtual_network"></a> [existing\_virtual\_network](#input\_existing\_virtual\_network) | Conditionally use an existing virtual network. The `virtual_network_address_space` must match an existing address space in the VNet. This also requires the resource group name. | `string` | `""` | no |
 | <a name="input_launch_in_vnet"></a> [launch\_in\_vnet](#input\_launch\_in\_vnet) | Conditionally launch into a VNet | `bool` | `true` | no |
