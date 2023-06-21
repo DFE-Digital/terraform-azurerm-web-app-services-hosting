@@ -119,6 +119,11 @@ variable "service_log_level" {
   default     = "Information"
 }
 
+variable "service_log_ipv4_allow_list" {
+  description = "IPv4 addresses that are authorised to modify the Log storage account"
+  type        = list(string)
+}
+
 variable "service_log_retention" {
   description = "Service log retention in days"
   type        = number
