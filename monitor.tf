@@ -90,7 +90,7 @@ resource "azurerm_monitor_action_group" "web_app_service" {
 
     content {
       name                    = "Event Hub"
-      event_hub_name          = azurerm_eventhub.web_app_service
+      event_hub_name          = azurerm_eventhub.web_app_service.name
       event_hub_namespace     = azurerm_eventhub_namespace.web_app_service[0].id
       subscription_id         = data.azurerm_subscription.current.subscription_id
       use_common_alert_schema = true
