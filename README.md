@@ -235,7 +235,7 @@ module "azure_web_app_services_hosting" {
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | 1.12.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.89.0 |
-| <a name="provider_dns"></a> [dns](#provider\_dns) | 3.3.2 |
+| <a name="provider_dns"></a> [dns](#provider\_dns) | 3.4.0 |
 
 ## Resources
 
