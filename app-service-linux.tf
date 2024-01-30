@@ -12,6 +12,13 @@ resource "azurerm_linux_web_app" "default" {
     local.service_app_insights_settings,
   )
 
+  identity {
+    type = "UserAssigned"
+    identity_ids = [
+      azurerm_user_assigned_identity.default.id
+    ]
+  }
+
   site_config {
     always_on                         = true
     health_check_path                 = local.service_health_check_path
