@@ -1,13 +1,13 @@
 resource "azurerm_windows_web_app" "default" {
   count = local.service_plan_os == "Windows" ? 1 : 0
 
-  name                = "${local.resource_prefix}default"
-  resource_group_name = local.resource_group.name
-  location            = local.resource_group.location
-  service_plan_id     = azurerm_service_plan.default.id
-
+  name                      = "${local.resource_prefix}default"
+  resource_group_name       = local.resource_group.name
+  location                  = local.resource_group.location
+  service_plan_id           = azurerm_service_plan.default.id
   virtual_network_subnet_id = local.launch_in_vnet ? azurerm_subnet.web_app_service_infra_subnet[0].id : null
   https_only                = true
+
   app_settings = merge(
     local.service_app_settings,
     local.service_app_insights_settings,
@@ -28,6 +28,7 @@ resource "azurerm_windows_web_app" "default" {
     http2_enabled                     = true
     minimum_tls_version               = "1.2"
     worker_count                      = local.service_worker_count
+
     application_stack {
       current_stack       = local.service_stack
       dotnet_version      = local.service_stack == "dotnet" ? local.service_stack_version : null
@@ -37,6 +38,7 @@ resource "azurerm_windows_web_app" "default" {
       php_version         = local.service_stack == "php" ? local.service_stack_version : null
       java_version        = local.service_stack == "java" ? local.service_stack_version : null
     }
+
     dynamic "ip_restriction" {
       for_each = local.restrict_web_app_service_to_cdn_inbound_only && local.enable_cdn_frontdoor ? [1] : []
       content {
@@ -48,6 +50,16 @@ resource "azurerm_windows_web_app" "default" {
           ]
         }
         service_tag = "AzureFrontDoor.Backend"
+      }
+    }
+
+    dynamic "ip_restriction" {
+      for_each = local.web_app_service_allow_ips_inbound
+
+      content {
+        name       = "Allow from ${ip_restriction.value}"
+        action     = "Allow"
+        ip_address = ip_restriction.value
       }
     }
   }

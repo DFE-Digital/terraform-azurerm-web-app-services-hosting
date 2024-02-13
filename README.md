@@ -226,7 +226,6 @@ module "azure_web_app_services_hosting" {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.4.5 |
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | >= 1.4.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.48.0 |
-| <a name="requirement_dns"></a> [dns](#requirement\_dns) | >= 3.2.4 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
 
 ## Providers
@@ -234,8 +233,7 @@ module "azure_web_app_services_hosting" {
 | Name | Version |
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | 1.12.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.89.0 |
-| <a name="provider_dns"></a> [dns](#provider\_dns) | 3.4.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.91.0 |
 
 ## Resources
 
@@ -296,8 +294,6 @@ module "azure_web_app_services_hosting" {
 | [azurerm_nat_gateway.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway) | resource |
 | [azurerm_nat_gateway_public_ip_association.default](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/nat_gateway_public_ip_association) | resource |
 | [azurerm_network_security_group.web_app_service_infra](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group) | resource |
-| [azurerm_network_security_rule.web_app_service_infra_allow_frontdoor_inbound_only](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule) | resource |
-| [azurerm_network_security_rule.web_app_service_infra_allow_ips_inbound](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule) | resource |
 | [azurerm_private_dns_a_record.storage_private_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_a_record) | resource |
 | [azurerm_private_dns_zone.storage_private_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone) | resource |
 | [azurerm_private_dns_zone_virtual_network_link.storage_private_link](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link) | resource |
@@ -324,7 +320,6 @@ module "azure_web_app_services_hosting" {
 | [azurerm_storage_account_blob_container_sas.logs](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas) | data source |
 | [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
 | [azurerm_virtual_network.existing_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/virtual_network) | data source |
-| [dns_a_record_set.web_app_service_ip_address](https://registry.terraform.io/providers/hashicorp/dns/latest/docs/data-sources/a_record_set) | data source |
 
 ## Inputs
 
@@ -386,7 +381,7 @@ module "azure_web_app_services_hosting" {
 | <a name="input_monitor_slack_channel"></a> [monitor\_slack\_channel](#input\_monitor\_slack\_channel) | Slack channel name/id to send messages to | `string` | `""` | no |
 | <a name="input_monitor_slack_webhook_receiver"></a> [monitor\_slack\_webhook\_receiver](#input\_monitor\_slack\_webhook\_receiver) | A Slack App webhook URL | `string` | `""` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project name. Will be used along with `environment` as a prefix for all resources. | `string` | n/a | yes |
-| <a name="input_restrict_web_app_service_to_cdn_inbound_only"></a> [restrict\_web\_app\_service\_to\_cdn\_inbound\_only](#input\_restrict\_web\_app\_service\_to\_cdn\_inbound\_only) | Restricts access to the Web App by adding an ip restriction rule which only allows 'AzureFrontDoor.Backend' inbound, and matches the cdn fdid header. It also creates a network security group that only allows 'AzureFrontDoor.Backend' inbound, and attaches it to the subnet of the web app environment. | `bool` | `true` | no |
+| <a name="input_restrict_web_app_service_to_cdn_inbound_only"></a> [restrict\_web\_app\_service\_to\_cdn\_inbound\_only](#input\_restrict\_web\_app\_service\_to\_cdn\_inbound\_only) | Restricts access to the Web App by adding an ip restriction rule which only allows 'AzureFrontDoor.Backend' inbound, and matches the cdn fdid header | `bool` | `true` | no |
 | <a name="input_service_app_settings"></a> [service\_app\_settings](#input\_service\_app\_settings) | Service app settings | `map(string)` | `{}` | no |
 | <a name="input_service_health_check_eviction_time_in_min"></a> [service\_health\_check\_eviction\_time\_in\_min](#input\_service\_health\_check\_eviction\_time\_in\_min) | The amount of time in minutes that a node can be unhealthy before being removed from the load balancer | `number` | `5` | no |
 | <a name="input_service_health_check_path"></a> [service\_health\_check\_path](#input\_service\_health\_check\_path) | Service health check path | `string` | `"/"` | no |
@@ -402,7 +397,7 @@ module "azure_web_app_services_hosting" {
 | <a name="input_service_worker_count"></a> [service\_worker\_count](#input\_service\_worker\_count) | The number of Workers for the App Service | `number` | `1` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to be applied to all resources | `map(string)` | `{}` | no |
 | <a name="input_virtual_network_address_space"></a> [virtual\_network\_address\_space](#input\_virtual\_network\_address\_space) | Virtual Network address space CIDR | `string` | `"172.16.0.0/12"` | no |
-| <a name="input_web_app_service_allow_ips_inbound"></a> [web\_app\_service\_allow\_ips\_inbound](#input\_web\_app\_service\_allow\_ips\_inbound) | Restricts access to the Web App by creating a network security group rule that only allow inbound traffic from the provided list of IPs | `list(string)` | `[]` | no |
+| <a name="input_web_app_service_allow_ips_inbound"></a> [web\_app\_service\_allow\_ips\_inbound](#input\_web\_app\_service\_allow\_ips\_inbound) | Restricts inbound access to the Web App to the provided list of IPs | `list(string)` | `[]` | no |
 
 ## Outputs
 
