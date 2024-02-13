@@ -1,12 +1,14 @@
 resource "azurerm_linux_web_app" "default" {
   count = local.service_plan_os == "Linux" ? 1 : 0
 
-  name                      = "${local.resource_prefix}default"
-  resource_group_name       = local.resource_group.name
-  location                  = local.resource_group.location
-  service_plan_id           = azurerm_service_plan.default.id
-  virtual_network_subnet_id = azurerm_subnet.web_app_service_infra_subnet[0].id
-  https_only                = true
+  name                          = "${local.resource_prefix}default"
+  resource_group_name           = local.resource_group.name
+  location                      = local.resource_group.location
+  service_plan_id               = azurerm_service_plan.default.id
+  virtual_network_subnet_id     = azurerm_subnet.web_app_service_infra_subnet[0].id
+  https_only                    = true
+  public_network_access_enabled = local.public_network_access_enabled
+
   app_settings = merge(
     local.service_app_settings,
     local.service_app_insights_settings,
@@ -52,6 +54,16 @@ resource "azurerm_linux_web_app" "default" {
         }
 
         service_tag = "AzureFrontDoor.Backend"
+      }
+    }
+
+    dynamic "ip_restriction" {
+      for_each = local.web_app_service_allow_ips_inbound
+
+      content {
+        name       = "Allow IP Traffic from ${each.value}"
+        action     = "Allow"
+        ip_address = each.value
       }
     }
   }

@@ -28,6 +28,7 @@ resource "azurerm_windows_web_app" "default" {
     http2_enabled                     = true
     minimum_tls_version               = "1.2"
     worker_count                      = local.service_worker_count
+
     application_stack {
       current_stack       = local.service_stack
       dotnet_version      = local.service_stack == "dotnet" ? local.service_stack_version : null
@@ -37,6 +38,7 @@ resource "azurerm_windows_web_app" "default" {
       php_version         = local.service_stack == "php" ? local.service_stack_version : null
       java_version        = local.service_stack == "java" ? local.service_stack_version : null
     }
+
     dynamic "ip_restriction" {
       for_each = local.restrict_web_app_service_to_cdn_inbound_only && local.enable_cdn_frontdoor ? [1] : []
       content {
@@ -48,6 +50,16 @@ resource "azurerm_windows_web_app" "default" {
           ]
         }
         service_tag = "AzureFrontDoor.Backend"
+      }
+    }
+
+    dynamic "ip_restriction" {
+      for_each = local.web_app_service_allow_ips_inbound
+
+      content {
+        name       = "Allow IP Traffic from ${each.value}"
+        action     = "Allow"
+        ip_address = each.value
       }
     }
   }

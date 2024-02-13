@@ -13,10 +13,6 @@ data "azurerm_resource_group" "existing_resource_group" {
 
 data "azurerm_subscription" "current" {}
 
-data "dns_a_record_set" "web_app_service_ip_address" {
-  host = local.service_app.default_hostname
-}
-
 data "azurerm_logic_app_workflow" "existing_logic_app_workflow" {
   count = local.existing_logic_app_workflow.name == "" ? 0 : 1
 

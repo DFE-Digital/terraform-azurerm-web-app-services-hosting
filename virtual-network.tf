@@ -59,40 +59,6 @@ resource "azurerm_network_security_group" "web_app_service_infra" {
   tags = local.tags
 }
 
-resource "azurerm_network_security_rule" "web_app_service_infra_allow_frontdoor_inbound_only" {
-  count = local.launch_in_vnet && local.restrict_web_app_service_to_cdn_inbound_only ? 1 : 0
-
-  network_security_group_name = azurerm_network_security_group.web_app_service_infra[0].name
-  resource_group_name         = local.resource_group.name
-
-  name                       = "AllowFrontdoor"
-  priority                   = 100
-  direction                  = "Inbound"
-  access                     = "Allow"
-  protocol                   = "*"
-  source_port_range          = "*"
-  destination_port_range     = "443"
-  source_address_prefix      = "AzureFrontDoor.Backend"
-  destination_address_prefix = "${data.dns_a_record_set.web_app_service_ip_address.addrs[0]}/32"
-}
-
-resource "azurerm_network_security_rule" "web_app_service_infra_allow_ips_inbound" {
-  count = local.launch_in_vnet && length(local.web_app_service_allow_ips_inbound) != 0 ? 1 : 0
-
-  network_security_group_name = azurerm_network_security_group.web_app_service_infra[0].name
-  resource_group_name         = local.resource_group.name
-
-  name                       = "AllowIpsInbound"
-  priority                   = 200
-  direction                  = "Inbound"
-  access                     = "Allow"
-  protocol                   = "*"
-  source_port_range          = "*"
-  destination_port_range     = "443"
-  source_address_prefixes    = local.web_app_service_allow_ips_inbound
-  destination_address_prefix = "${data.dns_a_record_set.web_app_service_ip_address.addrs[0]}/32"
-}
-
 resource "azurerm_subnet_network_security_group_association" "web_app_service_infra_allow_frontdoor_inbound_only" {
   count = local.launch_in_vnet ? 1 : 0
 

@@ -130,6 +130,7 @@ locals {
 
   restrict_web_app_service_to_cdn_inbound_only = var.restrict_web_app_service_to_cdn_inbound_only
   web_app_service_allow_ips_inbound            = var.web_app_service_allow_ips_inbound
+  public_network_access_enabled                = local.restrict_web_app_service_to_cdn_inbound_only || length(web_app_service_allow_ips_inbound) > 0 ? 1 : 0
 
   enable_dns_zone      = var.enable_dns_zone
   dns_zone_domain_name = var.dns_zone_domain_name

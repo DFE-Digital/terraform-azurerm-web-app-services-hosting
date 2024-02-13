@@ -185,13 +185,13 @@ variable "enable_cdn_frontdoor" {
 }
 
 variable "restrict_web_app_service_to_cdn_inbound_only" {
-  description = "Restricts access to the Web App by adding an ip restriction rule which only allows 'AzureFrontDoor.Backend' inbound, and matches the cdn fdid header. It also creates a network security group that only allows 'AzureFrontDoor.Backend' inbound, and attaches it to the subnet of the web app environment."
+  description = "Restricts access to the Web App by adding an ip restriction rule which only allows 'AzureFrontDoor.Backend' inbound, and matches the cdn fdid header"
   type        = bool
   default     = true
 }
 
 variable "web_app_service_allow_ips_inbound" {
-  description = "Restricts access to the Web App by creating a network security group rule that only allow inbound traffic from the provided list of IPs"
+  description = "Restricts inbound access to the Web App to the provided list of IPs"
   type        = list(string)
   default     = []
 }
