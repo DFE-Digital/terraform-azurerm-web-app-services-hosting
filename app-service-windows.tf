@@ -62,6 +62,17 @@ resource "azurerm_windows_web_app" "default" {
         ip_address = ip_restriction.value
       }
     }
+
+    dynamic "ip_restriction" {
+      for_each = length(local.web_app_service_allow_ips_inbound) > 0 ? [1] : []
+
+      content {
+        name       = "Deny from Any"
+        ip_address = "0.0.0.0/0"
+        action     = "Deny"
+        priority   = 2147483647
+      }
+    }
   }
 
   dynamic "logs" {
