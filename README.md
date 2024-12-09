@@ -11,7 +11,7 @@ Example module usage:
 
 ```hcl
 module "azure_web_app_services_hosting" {
-  source  = "github.com/DFE-Digital/terraform-azurerm-web-app-services-hosting?ref=v0.6.1"
+  source  = "github.com/DFE-Digital/terraform-azurerm-web-app-services-hosting?ref=v0.6.3"
 
   environment    = "dev"
   project_name   = "myproject"
