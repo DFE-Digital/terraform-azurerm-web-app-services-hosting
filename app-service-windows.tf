@@ -26,7 +26,7 @@ resource "azurerm_windows_web_app" "default" {
     health_check_eviction_time_in_min = local.service_health_check_eviction_time_in_min
     vnet_route_all_enabled            = true
     http2_enabled                     = true
-    minimum_tls_version               = "1.2"
+    minimum_tls_version               = "1.3"
     worker_count                      = local.service_worker_count
 
     application_stack {
