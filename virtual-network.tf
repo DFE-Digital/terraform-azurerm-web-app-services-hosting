@@ -16,7 +16,7 @@ resource "azurerm_route_table" "default" {
   name                          = "${local.resource_prefix}default"
   location                      = local.resource_group.location
   resource_group_name           = local.resource_group.name
-  disable_bgp_route_propagation = false
+  bgp_route_propagation_enabled = true
   tags                          = local.tags
 }
 
@@ -72,11 +72,11 @@ resource "azurerm_subnet_network_security_group_association" "web_app_service_in
 resource "azurerm_subnet" "storage_private_endpoint_subnet" {
   count = local.enable_service_logs ? 1 : 0
 
-  name                                      = "${local.resource_prefix}storageprivateendpoint"
-  virtual_network_name                      = local.virtual_network.name
-  resource_group_name                       = local.resource_group.name
-  address_prefixes                          = [local.storage_subnet_cidr]
-  private_endpoint_network_policies_enabled = true
+  name                              = "${local.resource_prefix}storageprivateendpoint"
+  virtual_network_name              = local.virtual_network.name
+  resource_group_name               = local.resource_group.name
+  address_prefixes                  = [local.storage_subnet_cidr]
+  private_endpoint_network_policies = "Enabled"
 }
 
 resource "azurerm_subnet_route_table_association" "storage_private_endpoint_subnet" {
