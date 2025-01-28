@@ -160,6 +160,12 @@ variable "monitor_endpoint_healthcheck" {
   default     = "/"
 }
 
+variable "monitor_http_availability_fqdn" {
+  description = "Specify a FQDN to monitor for HTTP Availability. Leave unset to dynamically calculate the correct FQDN"
+  type        = string
+  default     = ""
+}
+
 variable "enable_cdn_frontdoor" {
   description = "Enable Azure CDN Front Door. This will use the Web App default hostname as the origin."
   type        = bool
