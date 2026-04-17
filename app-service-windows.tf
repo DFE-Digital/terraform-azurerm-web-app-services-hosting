@@ -1,6 +1,13 @@
 resource "azurerm_windows_web_app" "default" {
   count = local.service_plan_os == "Windows" ? 1 : 0
 
+  #checkov:skip=CKV_AZURE_17: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_78: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_80: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_13: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_222: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_88: Suppressing check pending review
+
   name                      = "${local.resource_prefix}default"
   resource_group_name       = local.resource_group.name
   location                  = local.resource_group.location

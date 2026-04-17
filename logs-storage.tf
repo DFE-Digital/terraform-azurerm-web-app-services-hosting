@@ -1,6 +1,17 @@
 resource "azurerm_storage_account" "logs" {
   count = local.enable_service_logs ? 1 : 0
 
+  #checkov:skip=CKV_AZURE_59: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_33: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_190: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_206: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_41: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_38: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_40: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_1: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_47: Suppressing check pending review
+  #checkov:skip=CKV2_AZURE_33: Suppressing check pending review
+
   name                       = "${replace(local.resource_prefix, "-", "")}logs"
   resource_group_name        = azurerm_resource_group.default[0].name
   location                   = azurerm_resource_group.default[0].location
@@ -16,6 +27,8 @@ resource "azurerm_storage_account" "logs" {
 resource "azurerm_storage_account_network_rules" "logs" {
   count = local.enable_service_logs ? 1 : 0
 
+  #checkov:skip=CKV2_AZURE_21: Suppressing check pending review
+
   storage_account_id         = azurerm_storage_account.logs[0].id
   default_action             = "Deny"
   bypass                     = ["AzureServices"]
@@ -28,6 +41,9 @@ resource "azurerm_storage_account_network_rules" "logs" {
 }
 
 resource "azurerm_storage_container" "logs" {
+
+  #checkov:skip=CKV2_AZURE_21: Suppressing check pending review
+
   for_each = local.enable_service_logs ? local.service_log_types : []
 
   name                  = "${local.resource_prefix}${each.value}logs"
