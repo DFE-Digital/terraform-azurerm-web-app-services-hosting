@@ -1,19 +1,19 @@
 resource "azurerm_windows_web_app" "default" {
   count = local.service_plan_os == "Windows" ? 1 : 0
 
-  #checkov:skip=CKV_AZURE_17: Suppressing check pending review
-  #checkov:skip=CKV_AZURE_78: Suppressing check pending review
-  #checkov:skip=CKV_AZURE_80: Suppressing check pending review
-  #checkov:skip=CKV_AZURE_13: Suppressing check pending review
-  #checkov:skip=CKV_AZURE_222: Suppressing check pending review
-  #checkov:skip=CKV_AZURE_88: Suppressing check pending review
+  #checkov:skip=CKV_AZURE_17: Ensure the web app has 'Client Certificates (Incoming client certificates)' set
+  #checkov:skip=CKV_AZURE_78: Ensure FTP deployments are disabled
+  #checkov:skip=CKV_AZURE_80: Ensure that 'Net Framework' version is the latest, if used as a part of the web app
+  #checkov:skip=CKV_AZURE_13: Ensure App Service Authentication is set on Azure App Service
+  #checkov:skip=CKV_AZURE_88: Ensure that app services use Azure Files
 
-  name                      = "${local.resource_prefix}default"
-  resource_group_name       = local.resource_group.name
-  location                  = local.resource_group.location
-  service_plan_id           = azurerm_service_plan.default.id
-  virtual_network_subnet_id = local.launch_in_vnet ? azurerm_subnet.web_app_service_infra_subnet[0].id : null
-  https_only                = true
+  name                          = "${local.resource_prefix}default"
+  resource_group_name           = local.resource_group.name
+  location                      = local.resource_group.location
+  service_plan_id               = azurerm_service_plan.default.id
+  virtual_network_subnet_id     = local.launch_in_vnet ? azurerm_subnet.web_app_service_infra_subnet[0].id : null
+  https_only                    = true
+  public_network_access_enabled = false
 
   app_settings = merge(
     local.service_app_settings,
